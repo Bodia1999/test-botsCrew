@@ -1,11 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.request.LectorRequest;
 import com.example.demo.dto.request.LectorToDepartmentRequest;
-import com.example.demo.dto.response.LectorResponse;
 import com.example.demo.dto.response.LectorToDepartmentResponse;
-import com.example.demo.entity.Department;
-import com.example.demo.entity.Lector;
 import com.example.demo.entity.LectorToDepartment;
 import com.example.demo.exception.WrongInputException;
 import com.example.demo.repository.LectorToDepartmentRepository;

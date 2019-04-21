@@ -20,7 +20,6 @@ public class Lector {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Column(name = "_name")
     private String name;
 
     private String surname;

@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-import com.sun.istack.internal.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,9 +21,6 @@ public class LectorToDepartment {
     private Long id;
 
     private Double salary;
-
-//    @NotNull
-//    private Head head;
 
     @ManyToMany(mappedBy = "lectorToDepartments")
     private List<Department> departments = new ArrayList<>();

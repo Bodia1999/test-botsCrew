@@ -23,8 +23,8 @@ import javax.annotation.PostConstruct;
 @SpringBootApplication
 @EntityScan(basePackages = "com.example.demo.entity")
 public class DemoApplication {
-    //    @Autowired
-//    private LectorService lectorService;
+
+
     @Autowired
     private DepartmentService departmentService;
 
@@ -85,9 +85,6 @@ public class DemoApplication {
         lectorService.save(lectorRequest);
 
 
-
-
-
         LectorToDepartmentRequest lectorToDepartmentRequest = new LectorToDepartmentRequest();
         lectorToDepartmentRequest.setSalary(1250d);
         lectorToDepartmentRequest.setLectorId(2L);
@@ -119,8 +116,6 @@ public class DemoApplication {
         lectorToDepartmentService.save(lectorToDepartmentRequest);
 
 
-
-
         DepartmentRequest departmentRequest = new DepartmentRequest();
         departmentRequest.setNameOfDepartment("Math");
         departmentRequest.getLectorToDepartment().add(1L);
@@ -138,16 +133,15 @@ public class DemoApplication {
         departmentService.save(departmentRequest1);
 
 
-
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("1. Answer: \n");
         for (DepartmentResponse departmentResponse : departmentService.findAll()) {
             for (LectorToDepartmentResponse lectorToDepartmentResponse : departmentResponse.getLectorToDepartmentResponse()) {
                 if (lectorToDepartmentResponse.getLectorResponse().getHead().equals(Head.HEAD)) {
-                    stringBuilder.append( "Head of " + departmentResponse.
+                    stringBuilder.append("Head of " + departmentResponse.
                             getNameOfDepartment() + " department is " +
                             lectorToDepartmentResponse.getLectorResponse().
-                            getSurname() + " " + lectorToDepartmentResponse.
+                                    getSurname() + " " + lectorToDepartmentResponse.
                             getLectorResponse().getName() + "\n");
 //
                 }
@@ -159,8 +153,6 @@ public class DemoApplication {
                 "professors - " + lectorService.countAllByDegree(Degree.PROFESSOR) + "\n");
 
 
-
-
         stringBuilder.append("3. Answer: The average salary of \n");
         for (DepartmentResponse departmentResponse : departmentService.findAll()) {
             int i = 1;
@@ -170,7 +162,7 @@ public class DemoApplication {
                 sum += lectorToDepartmentResponse.getSalary();
                 i++;
             }
-            stringBuilder.append("The average salary of "+departmentResponse.getNameOfDepartment() + " is " + (sum / i) + "\n");
+            stringBuilder.append("The average salary of " + departmentResponse.getNameOfDepartment() + " is " + (sum / i) + "\n");
         }
 
 
@@ -178,24 +170,21 @@ public class DemoApplication {
         for (DepartmentResponse departmentResponse : departmentService.findAll()) {
             Long id = departmentResponse.getId();
             Long aLong = lectorToDepartmentService.countAllByDepartment(id);
-            stringBuilder.append("Department of "+departmentResponse.getNameOfDepartment()+", count of employees - "+aLong+"\n");
+            stringBuilder.append("Department of " + departmentResponse.getNameOfDepartment() + ", count of employees - " + aLong + "\n");
 
         }
 
         LectorFilterRequest lectorFilterRequest = new LectorFilterRequest();
         lectorFilterRequest.setName("ya");
-        stringBuilder.append("5. Answer: searching by - ("+lectorFilterRequest.getName()+")\n");
+        stringBuilder.append("5. Answer: searching by - (" + lectorFilterRequest.getName() + ")\n");
         for (LectorResponse lectorResponse : lectorService.filter(lectorFilterRequest)) {
             String name = lectorResponse.getName();
             String surname = lectorResponse.getSurname();
-            stringBuilder.append(surname+" "+name+"\n");
-//            System.out.println(surname+" "+name);
+            stringBuilder.append(surname + " " + name + "\n");
         }
 
 
         System.out.println(stringBuilder.toString());
-
-
 
 
     }

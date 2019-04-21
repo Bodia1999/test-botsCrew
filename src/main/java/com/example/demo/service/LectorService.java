@@ -9,8 +9,6 @@ import com.example.demo.exception.WrongInputException;
 import com.example.demo.repository.LectorRepository;
 import com.example.demo.specification.LectorSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +20,7 @@ public class LectorService {
     @Autowired
     private LectorRepository lectorRepository;
 
-//    @Autowired
-//    private LectorSpecification lectorSpecification;
+
 
 
     public Lector findOne(Long id) throws WrongInputException {

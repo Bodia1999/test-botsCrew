@@ -21,9 +21,9 @@ public class LectorResponse {
     private String surname;
 
     private Degree degree;
+
     private Head head;
 
-//    private List<DepartmentResponse> departmentResponses = new ArrayList<>();
 
     public LectorResponse(Lector lector){
         id = lector.getId();
@@ -31,6 +31,5 @@ public class LectorResponse {
         surname = lector.getSurname();
         degree = lector.getDegree();
         head = lector.getHead();
-//        departmentResponses = lector.getLectorToDepartments().stream().map(LectorToDepartmentResponse::new).collect(Collectors.toList());
     }
 }

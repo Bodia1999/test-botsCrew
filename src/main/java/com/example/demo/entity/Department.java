@@ -12,7 +12,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @Entity
-//@NamedQuery(name = "Department.countAll",query = "select count from department")
+
 public class Department {
 
     @Id
