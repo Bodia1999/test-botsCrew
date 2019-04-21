@@ -86,14 +86,14 @@ public class DemoApplication {
 
 
         LectorToDepartmentRequest lectorToDepartmentRequest = new LectorToDepartmentRequest();
-        lectorToDepartmentRequest.setSalary(1250d);
-        lectorToDepartmentRequest.setLectorId(2L);
-        lectorToDepartmentService.save(lectorToDepartmentRequest);
 
         lectorToDepartmentRequest.setSalary(5000d);
         lectorToDepartmentRequest.setLectorId(1L);
         lectorToDepartmentService.save(lectorToDepartmentRequest);
 
+        lectorToDepartmentRequest.setSalary(1250d);
+        lectorToDepartmentRequest.setLectorId(2L);
+        lectorToDepartmentService.save(lectorToDepartmentRequest);
 
         lectorToDepartmentRequest.setSalary(2000d);
         lectorToDepartmentRequest.setLectorId(3L);
@@ -127,6 +127,7 @@ public class DemoApplication {
         DepartmentRequest departmentRequest1 = new DepartmentRequest();
         departmentRequest1.setNameOfDepartment("English");
         departmentRequest1.getLectorToDepartment().add(4L);
+        departmentRequest1.getLectorToDepartment().add(2L);
         departmentRequest1.getLectorToDepartment().add(5L);
         departmentRequest1.getLectorToDepartment().add(6L);
         departmentRequest1.getLectorToDepartment().add(7L);
@@ -175,7 +176,7 @@ public class DemoApplication {
         }
 
         LectorFilterRequest lectorFilterRequest = new LectorFilterRequest();
-        lectorFilterRequest.setName("ya");
+        lectorFilterRequest.setName("o");
         stringBuilder.append("5. Answer: searching by - (" + lectorFilterRequest.getName() + ")\n");
         for (LectorResponse lectorResponse : lectorService.filter(lectorFilterRequest)) {
             String name = lectorResponse.getName();
