@@ -21,15 +21,13 @@ public class LectorService {
     private LectorRepository lectorRepository;
 
 
-
-
     public Lector findOne(Long id) throws WrongInputException {
         return lectorRepository.findById(id).orElseThrow(() -> new WrongInputException("Lector with " + id + " wasn`t found"));
 
     }
 
-    public Lector lectorRequestToLector(Lector lector, LectorRequest lectorRequest){
-        if (lector == null){
+    public Lector lectorRequestToLector(Lector lector, LectorRequest lectorRequest) {
+        if (lector == null) {
             lector = new Lector();
         }
 
@@ -42,30 +40,45 @@ public class LectorService {
         return lector;
     }
 
-    public LectorResponse save(LectorRequest lectorRequest){
-        return new LectorResponse(lectorRepository.save(lectorRequestToLector(null,lectorRequest)));
+    public LectorResponse save(LectorRequest lectorRequest) {
+        return new LectorResponse(lectorRepository.save(lectorRequestToLector(null, lectorRequest)));
     }
 
     public LectorResponse update(Long id, LectorRequest lectorRequest) throws WrongInputException {
-        return new LectorResponse(lectorRepository.save(lectorRequestToLector(findOne(id),lectorRequest)));
+        return new LectorResponse(lectorRepository.save(lectorRequestToLector(findOne(id), lectorRequest)));
     }
 
-    public List<LectorResponse> findAll(){
+    public List<LectorResponse> findAll() {
         return lectorRepository.findAll().stream().map(LectorResponse::new).collect(Collectors.toList());
     }
 
 
-    public List<LectorResponse> filter(LectorFilterRequest lectorFilterRequest){
+    public List<LectorResponse> filter(LectorFilterRequest lectorFilterRequest) {
         return lectorRepository.findAll(new LectorSpecification(lectorFilterRequest)).stream().map(LectorResponse::new).collect(Collectors.toList());
     }
 
 
-
-
-
-
-
-    public Long countAllByDegree(Degree degree){
+    public Long countAllByDegree(Degree degree) {
         return lectorRepository.countAllByDegreeLike(degree);
+    }
+
+    public String countDegree() {
+
+        String newLine = "assistants - " + countAllByDegree(Degree.ASSISTANT) + "\n" +
+                "associate professors - " + countAllByDegree(Degree.ASSOCIATE_PROFESSOR) + "\n" +
+                "professors - " + countAllByDegree(Degree.PROFESSOR) + "\n";
+        return newLine;
+    }
+
+    public String seekByPieceOf(String inputValue) {
+        StringBuilder stringBuilder = new StringBuilder();
+        LectorFilterRequest lectorFilterRequest = new LectorFilterRequest();
+        lectorFilterRequest.setName(inputValue);
+        for (LectorResponse lectorResponse : filter(lectorFilterRequest)) {
+            String name = lectorResponse.getName();
+            String surname = lectorResponse.getSurname();
+            stringBuilder.append(surname + " " + name + "\n");
+        }
+        return stringBuilder.toString();
     }
 }

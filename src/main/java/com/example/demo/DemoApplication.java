@@ -19,6 +19,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import javax.annotation.PostConstruct;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
 
 @SpringBootApplication
 @EntityScan(basePackages = "com.example.demo.entity")
@@ -34,13 +38,53 @@ public class DemoApplication {
     @Autowired
     private LectorService lectorService;
 
+    public static BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
     }
 
 
     @PostConstruct
-    public void init() throws WrongInputException {
+    public void init() throws WrongInputException, IOException {
+
+
+        savingPersonsToLecture();
+        addingLectorsToDepartment();
+
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("1. Answer: \n" + departmentService.taskFirst());
+
+        stringBuilder.append("2. Answer: \n" + lectorService.countDegree());
+
+
+        stringBuilder.append("3. Answer: The average salary of \n" + departmentService.taskThird());
+
+
+        stringBuilder.append("4. Answer: \n" + departmentService.taskFourth());
+
+
+        System.out.print(stringBuilder.toString());
+        System.out.println(findPersons());
+        for (; ; ) {
+            System.out.println("Do you want to seek again? Y/N");
+            String s = bufferedReader.readLine();
+
+            if (s.equals("y") || s.equals("Y")) {
+                System.out.println(findPersons());
+            } else if (s.equals("n") || s.equals("N")) {
+                break;
+            } else {
+                System.out.println("Enter your answer in correct way");
+            }
+        }
+
+
+    }
+
+    private void savingPersonsToLecture() throws WrongInputException {
         LectorRequest lectorRequest = new LectorRequest();
         lectorRequest.setName("Ivan");
         lectorRequest.setSurname("Ivaniv");
@@ -49,13 +93,13 @@ public class DemoApplication {
         lectorService.save(lectorRequest);
 
         lectorRequest.setName("Oleh");
-        lectorRequest.setSurname("Olehiv");
+        lectorRequest.setSurname("Koman");
         lectorRequest.setDegree(Degree.PROFESSOR);
         lectorRequest.setHead(Head.EMPLOYEE);
         lectorService.save(lectorRequest);
 
         lectorRequest.setName("Andriy");
-        lectorRequest.setSurname("Andriiv");
+        lectorRequest.setSurname("Ohirko");
         lectorRequest.setDegree(Degree.ASSOCIATE_PROFESSOR);
         lectorRequest.setHead(Head.EMPLOYEE);
         lectorService.save(lectorRequest);
@@ -73,7 +117,7 @@ public class DemoApplication {
         lectorService.save(lectorRequest);
 
         lectorRequest.setName("Anton");
-        lectorRequest.setSurname("Antoniv");
+        lectorRequest.setSurname("Bordun");
         lectorRequest.setDegree(Degree.ASSISTANT);
         lectorRequest.setHead(Head.EMPLOYEE);
         lectorService.save(lectorRequest);
@@ -116,6 +160,9 @@ public class DemoApplication {
         lectorToDepartmentService.save(lectorToDepartmentRequest);
 
 
+    }
+
+    private void addingLectorsToDepartment() throws WrongInputException {
         DepartmentRequest departmentRequest = new DepartmentRequest();
         departmentRequest.setNameOfDepartment("Math");
         departmentRequest.getLectorToDepartment().add(1L);
@@ -132,61 +179,16 @@ public class DemoApplication {
         departmentRequest1.getLectorToDepartment().add(6L);
         departmentRequest1.getLectorToDepartment().add(7L);
         departmentService.save(departmentRequest1);
+    }
 
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("1. Answer: \n");
-        for (DepartmentResponse departmentResponse : departmentService.findAll()) {
-            for (LectorToDepartmentResponse lectorToDepartmentResponse : departmentResponse.getLectorToDepartmentResponse()) {
-                if (lectorToDepartmentResponse.getLectorResponse().getHead().equals(Head.HEAD)) {
-                    stringBuilder.append("Head of " + departmentResponse.
-                            getNameOfDepartment() + " department is " +
-                            lectorToDepartmentResponse.getLectorResponse().
-                                    getSurname() + " " + lectorToDepartmentResponse.
-                            getLectorResponse().getName() + "\n");
-//
-                }
-            }
+    private String findPersons() throws IOException {
+        StringBuilder stringBuilder1 = new StringBuilder();
+        System.out.println("Enter piece of name or surname to seek");
+        String input = bufferedReader.readLine();
+        String response = lectorService.seekByPieceOf(input);
+        if (response.isEmpty()) {
+            response = "There are no such elements with these symbols (" + input + ")";
         }
-        stringBuilder.append("2. Answer: \n" +
-                "assistants - " + lectorService.countAllByDegree(Degree.ASSISTANT) + "\n" +
-                "associate professors - " + lectorService.countAllByDegree(Degree.ASSOCIATE_PROFESSOR) + "\n" +
-                "professors - " + lectorService.countAllByDegree(Degree.PROFESSOR) + "\n");
-
-
-        stringBuilder.append("3. Answer: The average salary of \n");
-        for (DepartmentResponse departmentResponse : departmentService.findAll()) {
-            int i = 1;
-            double sum = 0.0;
-            for (LectorToDepartmentResponse lectorToDepartmentResponse : departmentResponse.getLectorToDepartmentResponse()) {
-
-                sum += lectorToDepartmentResponse.getSalary();
-                i++;
-            }
-            stringBuilder.append("The average salary of " + departmentResponse.getNameOfDepartment() + " is " + (sum / i) + "\n");
-        }
-
-
-        stringBuilder.append("4. Answer: \n");
-        for (DepartmentResponse departmentResponse : departmentService.findAll()) {
-            Long id = departmentResponse.getId();
-            Long aLong = lectorToDepartmentService.countAllByDepartment(id);
-            stringBuilder.append("Department of " + departmentResponse.getNameOfDepartment() + ", count of employees - " + aLong + "\n");
-
-        }
-
-        LectorFilterRequest lectorFilterRequest = new LectorFilterRequest();
-        lectorFilterRequest.setName("o");
-        stringBuilder.append("5. Answer: searching by - (" + lectorFilterRequest.getName() + ")\n");
-        for (LectorResponse lectorResponse : lectorService.filter(lectorFilterRequest)) {
-            String name = lectorResponse.getName();
-            String surname = lectorResponse.getSurname();
-            stringBuilder.append(surname + " " + name + "\n");
-        }
-
-
-        System.out.println(stringBuilder.toString());
-
-
+        return stringBuilder1.append("5. Answer: searching by - (" + input + ")\n " + response).toString();
     }
 }
